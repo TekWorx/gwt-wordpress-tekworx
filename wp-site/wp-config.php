@@ -28,13 +28,16 @@ define( 'WP_DEBUG_DISPLAY', false );
 error_reporting( 0 );
 @ini_set( 'display_errors', 0 );
 
-$protocol = 'http';
-if ( ! empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off' ) {
-    $protocol = 'https';
-} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) {
-    $protocol = 'https';
+if (
+    ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) ||
+    ( isset( $_SERVER['HTTP_X_FORWARDED_SSL'] )   && $_SERVER['HTTP_X_FORWARDED_SSL']   === 'on' )    ||
+    ( isset( $_SERVER['HTTP_X_FORWARDED_PORT'] )   && $_SERVER['HTTP_X_FORWARDED_PORT']  == '443' )    ||
+    ( isset( $_SERVER['SERVER_PORT'] )             && $_SERVER['SERVER_PORT']             == '443' )
+) {
+    $_SERVER['HTTPS'] = 'on';
 }
-$host = ! empty( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : 'localhost:5000';
+$protocol = ( ! empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off' ) ? 'https' : 'http';
+$host     = ! empty( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : 'localhost:5000';
 $site_url = $protocol . '://' . $host;
 
 define( 'WP_HOME', $site_url );
