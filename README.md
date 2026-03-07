@@ -1,6 +1,8 @@
-#Government Web Template (GWT) for WordPress
+# Government Web Template (GWT) for WordPress
 
-Use this as a a guide for creating your banner slider images:
+Maintained by [TekWorx](https://github.com/TekWorx/gwt-wordpress-tekworx), forked from [iGovPhil/gwt-wordpress](https://github.com/iGovPhil/gwt-wordpress).
+
+Use this as a guide for creating your banner slider images:
 
 - Image should be inserted as a featured image, full size
 - Caption input is on the title field
@@ -8,21 +10,35 @@ Use this as a a guide for creating your banner slider images:
 
 ## Known bugs and requests for enhancements (RFEs)
 
-For a list of known issues and RFEs, check the [issue tracking system](https://github.com/iGovPhil/gwt-wordpress/issues).
-
-## Future updates
-
-- Tabbed Theme Options
-
-## Future updates
-
-**26.1.0**
-
-- [Added] Add to Share Social Icons to Facebook, Twitter, Pinterest, Linkedin, Whatsapp, Reddit
-- [Added] Custom Menu colors and custom menu font colors on steady and hover
-- [Enhance] Darker theme on the footer to highlight the philippine government logo
+For a list of known issues and RFEs, check the [issue tracking system](https://github.com/TekWorx/gwt-wordpress-tekworx/issues).
 
 ## CHANGE LOGS
+
+**27.0.0 (March 2026)**
+
+- [Security] Added sanitization callback to `register_setting()` for all theme options
+- [Security] Added output escaping (`esc_html`, `esc_attr`, `esc_url`) throughout all template files
+- [Security] Escaped slider output (link URLs, captions, meta box values)
+- [Security] Escaped breadcrumb output (separator, titles, URLs)
+- [Fix] PHP 8.x compatibility: fixed `sizeof()` on non-array fatal error
+- [Fix] PHP 8.x compatibility: fixed undefined array key warnings (50+ locations)
+- [Fix] PHP 8.x compatibility: fixed undefined variables (`$next_id`, `$backgroundHeaderImageSizeSetting`, `$menuSetting`, etc.)
+- [Fix] PHP 8.x compatibility: replaced loose comparisons with strict comparisons
+- [Fix] Removed erroneous `the_tags()` call from `<style>` element in header
+- [Fix] Fixed duplicate `template-tags.php` include
+- [Fix] Fixed `apply_filters` misuse in `function-initialize.php`
+- [Performance] Eliminated duplicate jQuery loading (single jQuery 3.6.0 instance)
+- [Performance] Moved render-blocking JS to footer
+- [Performance] Updated hardcoded version strings to use theme version for cache busting
+- [Accessibility] Added `<label>` element to search form for WCAG 2.0 compliance
+- [Accessibility] Added `role="switch"` and `aria-checked` to accessibility toggle buttons
+- [Accessibility] Expanded text resizer to target all content elements (not just `<p>`)
+- [WordPress] Enabled `title-tag` support (was commented out)
+- [WordPress] Replaced deprecated `wp_title()` with `document_title_parts` filter
+- [WordPress] Replaced `query_posts()` with `WP_Query` in slider
+- [Enhancement] Dynamic widget URL rewriting for HTTPS compatibility
+- [Enhancement] Robust HTTPS reverse proxy detection in configuration
+- See `AUDIT_REPORT.md` for the full technical audit
 
 **01/01/2022 to 04/01/2022**
 

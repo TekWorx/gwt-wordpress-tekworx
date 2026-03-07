@@ -261,7 +261,7 @@ $efs_query = new WP_Query('post_type=slider-image');
 
 ### `functions.php`
 - **Line 81:** Duplicate `require get_template_directory() . '/inc/template-tags.php';` — remove.
-- **Lines 105-108 (removed):** `block_frames()` X-Frame-Options function was correctly removed for Replit compatibility. In production, consider re-adding with a filter to allow whitelisted origins.
+- **Lines 105-108 (removed):** `block_frames()` X-Frame-Options function was correctly removed for twd compatibility. In production, consider re-adding with a filter to allow whitelisted origins.
 
 ### `header.php`
 - **Line 20:** Replace `wp_title()` with `add_theme_support('title-tag')`.
