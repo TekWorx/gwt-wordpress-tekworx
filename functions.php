@@ -104,6 +104,18 @@ if ( version_compare( $GLOBALS['wp_version'], '4.4-alpha', '<' ) ) {
 
 
 
+function govph_fix_widget_theme_urls( $text ) {
+    $current_uri = get_template_directory_uri();
+    $text = preg_replace(
+        '#https?://[^/\s"\']+/wp-content/themes/gwt-wordpress/#',
+        $current_uri . '/',
+        $text
+    );
+    return $text;
+}
+add_filter( 'widget_text', 'govph_fix_widget_theme_urls', 5 );
+add_filter( 'widget_text_content', 'govph_fix_widget_theme_urls', 5 );
+
 /**
  * Enable classic widgets or disabled gutenberg style for widgets.
  */
