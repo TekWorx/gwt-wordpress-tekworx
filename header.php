@@ -17,15 +17,14 @@
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php wp_title( '|', true, 'right' ); ?></title>
     <link rel="profile" href="http://gmpg.org/xfn/11">
     <?php if ( is_singular() && pings_open( get_queried_object() ) ) : ?>
     <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
     <?php endif; ?>
-    <link rel="icon" href="<?php echo get_template_directory_uri() ?>/favicon.ico">
+    <link rel="icon" href="<?php echo esc_url(get_template_directory_uri()) ?>/favicon.ico">
     <?php wp_head(); ?>
 
-    <style <?php the_tags(); ?>>
+    <style>
     .container-main a,
     .container-main a:active,
     .container-main a:visited,
@@ -200,7 +199,7 @@
     }
     </style>
     <script type="text/javascript" language="javascript">
-    var template_directory = '<?php echo get_template_directory_uri() ?>';
+    var template_directory = '<?php echo esc_url(get_template_directory_uri()) ?>';
     </script>
 </head>
 
@@ -211,25 +210,25 @@
             <li><a href="#" class="skips toggle-statement" title="Toggle Accessibility Statement" accesskey="0"
                     data-toggle="a11y-modal">Toggle Accessibility Statement</a></li>
             <?php if($govph_acc_link_home = govph_displayoptions('govph_acc_link_home')): ?>
-            <li><a href="<?php echo $govph_acc_link_home; ?>" accesskey="h">Home</a></li>
+            <li><a href="<?php echo esc_url($govph_acc_link_home); ?>" accesskey="h">Home</a></li>
             <?php endif; ?>
             <?php if($govph_acc_link_contact = govph_displayoptions('govph_acc_link_contact')): ?>
-            <li><a href="<?php echo $govph_acc_link_contact; ?>" accesskey="c">Contacts</a></li>
+            <li><a href="<?php echo esc_url($govph_acc_link_contact); ?>" accesskey="c">Contacts</a></li>
             <?php endif; ?>
             <?php if($govph_acc_link_feedback = govph_displayoptions('govph_acc_link_feedback')): ?>
-            <li><a href="<?php echo $govph_acc_link_feedback; ?>" accesskey="k">Feedback</a></li>
+            <li><a href="<?php echo esc_url($govph_acc_link_feedback); ?>" accesskey="k">Feedback</a></li>
             <?php endif; ?>
             <?php if($govph_acc_link_faq = govph_displayoptions('govph_acc_link_faq')): ?>
-            <li><a href="<?php echo $govph_acc_link_faq; ?>" accesskey="q">FAQ</a></li>
+            <li><a href="<?php echo esc_url($govph_acc_link_faq); ?>" accesskey="q">FAQ</a></li>
             <?php endif; ?>
             <?php if($govph_acc_link_search = govph_displayoptions('govph_acc_link_search')): ?>
-            <li><a href="<?php echo $govph_acc_link_search; ?>" accesskey="s">Search</a></li>
+            <li><a href="<?php echo esc_url($govph_acc_link_search); ?>" accesskey="s">Search</a></li>
             <?php endif; ?>
             <?php if($govph_acc_link_main_content = govph_displayoptions('govph_acc_link_main_content')): ?>
-            <li><a href="<?php echo $govph_acc_link_main_content; ?>" accesskey="R">Skip to Main Content</a></li>
+            <li><a href="<?php echo esc_attr($govph_acc_link_main_content); ?>" accesskey="R">Skip to Main Content</a></li>
             <?php endif; ?>
             <?php if($govph_acc_link_sitemap = govph_displayoptions('govph_acc_link_sitemap')): ?>
-            <li><a href="<?php echo $govph_acc_link_sitemap; ?>" accesskey="M">Sitemap</a></li>
+            <li><a href="<?php echo esc_attr($govph_acc_link_sitemap); ?>" accesskey="M">Sitemap</a></li>
             <?php endif; ?>
         </ul>
     </div>
@@ -244,23 +243,23 @@ Accessibility Features
 
 Shortcut Keys Combination Activation Combination keys used for each browser.
 
-	Chrome for Linux press (Alt+Shift+shortcut_key) 
-	Chrome for Windows press (Alt+shortcut_key) 
-	For Firefox press (Alt+Shift+shortcut_key) 
-	For Internet Explorer press (Alt+Shift+shortcut_key) then press (enter)
-	On Mac OS press (Ctrl+Opt+shortcut_key)
+        Chrome for Linux press (Alt+Shift+shortcut_key) 
+        Chrome for Windows press (Alt+shortcut_key) 
+        For Firefox press (Alt+Shift+shortcut_key) 
+        For Internet Explorer press (Alt+Shift+shortcut_key) then press (enter)
+        On Mac OS press (Ctrl+Opt+shortcut_key)
 
-	Accessibility Statement (Combination + 0): Statement page that will show the available accessibility keys. 
-	Home Page (Combination + H): Accessibility key for redirecting to homepage. 
-	Main Content (Combination + R): Shortcut for viewing the content section of the current page. 
-	FAQ (Combination + Q): Shortcut for FAQ page. 
-	Contact (Combination + C): Shortcut for contact page or form inquiries. 
-	Feedback (Combination + K): Shortcut for feedback page. 
-	Site Map (Combination + M): Shortcut for site map (footer agency) section of the page. 
-	Search (Combination + S): Shortcut for search page. 
+        Accessibility Statement (Combination + 0): Statement page that will show the available accessibility keys. 
+        Home Page (Combination + H): Accessibility key for redirecting to homepage. 
+        Main Content (Combination + R): Shortcut for viewing the content section of the current page. 
+        FAQ (Combination + Q): Shortcut for FAQ page. 
+        Contact (Combination + C): Shortcut for contact page or form inquiries. 
+        Feedback (Combination + K): Shortcut for feedback page. 
+        Site Map (Combination + M): Shortcut for site map (footer agency) section of the page. 
+        Search (Combination + S): Shortcut for search page. 
 
 Press esc, or click the close the button to close this dialog box.
-	</textarea>
+        </textarea>
         <button class="close-button" data-close aria-label="Close modal" type="button">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -343,7 +342,7 @@ Press esc, or click the close the button to close this dialog box.
                                         </li>
                                         <li>
                                             <a href="#" id="accessibility-contrast" title="Toggle High Contrast"
-                                                class="toggle-contrast">
+                                                class="toggle-contrast" role="switch" aria-checked="false">
                                                 <span class="show-for-sr">High Contrast</span>
                                                 <i class="fa fa-low-vision fa-2x"></i>
                                             </a>
@@ -402,42 +401,42 @@ Press esc, or click the close the button to close this dialog box.
             <!-- original content goes in this container -->
             <div class="off-canvas-content" data-off-canvas-content>
                 <?php
-			$name_slogan_class = 'large-12 ';
-			$ear_content_class = '';
-			$ear_content_2_class = '';
-			if(is_active_sidebar('ear-content-1') && is_active_sidebar('ear-content-2')){
-				$name_slogan_class = 'large-6 ';
-				$ear_content_class = 'large-3 ';
-				$ear_content_2_class = 'large-3 ';
-			}
-			elseif(is_active_sidebar('ear-content-1') && !is_active_sidebar('ear-content-2')){
-				$name_slogan_class = 'large-9 ';
-				$ear_content_class = 'large-3 ';
-			}
-			elseif(!is_active_sidebar('ear-content-1') && is_active_sidebar('ear-content-2')){
-				$name_slogan_class = 'large-9 ';
-				$ear_content_2_class = 'large-3 ';
-			}
-			?>
+                        $name_slogan_class = 'large-12 ';
+                        $ear_content_class = '';
+                        $ear_content_2_class = '';
+                        if(is_active_sidebar('ear-content-1') && is_active_sidebar('ear-content-2')){
+                                $name_slogan_class = 'large-6 ';
+                                $ear_content_class = 'large-3 ';
+                                $ear_content_2_class = 'large-3 ';
+                        }
+                        elseif(is_active_sidebar('ear-content-1') && !is_active_sidebar('ear-content-2')){
+                                $name_slogan_class = 'large-9 ';
+                                $ear_content_class = 'large-3 ';
+                        }
+                        elseif(!is_active_sidebar('ear-content-1') && is_active_sidebar('ear-content-2')){
+                                $name_slogan_class = 'large-9 ';
+                                $ear_content_2_class = 'large-3 ';
+                        }
+                        ?>
 
                 <!-- masthead -->
                 <header class="container-masthead">
                     <div class="row">
-                        <div class="<?php echo $name_slogan_class ?> columns">
+                        <div class="<?php echo esc_attr($name_slogan_class) ?> columns">
                             <h1 class="logo"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"
                                     title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>"
                                     rel="home"><?php govph_displayoptions( 'govph_logo' ); ?></a></h1>
                         </div>
 
                         <?php if(is_active_sidebar('ear-content-1')): ?>
-                        <div class="<?php echo $ear_content_class ?> columns">
+                        <div class="<?php echo esc_attr($ear_content_class) ?> columns">
                             <?php do_action( 'before_sidebar' ); ?>
                             <?php dynamic_sidebar( 'ear-content-1' ) ?>
                         </div>
                         <?php endif; ?>
 
                         <?php if(is_active_sidebar('ear-content-2')): ?>
-                        <div class="<?php echo $ear_content_2_class ?> columns">
+                        <div class="<?php echo esc_attr($ear_content_2_class) ?> columns">
                             <?php do_action( 'before_sidebar' ); ?>
                             <?php dynamic_sidebar( 'ear-content-2' ) ?>
                         </div>

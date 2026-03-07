@@ -61,7 +61,7 @@ function slider_link_build_meta_box( $post ){
   ?>
   <div class='inside'>
     <div>
-      <input type="text" name="slider_link" value="<?php echo $slider_link; ?>" style="width: 100%;" />
+      <input type="text" name="slider_link" value="<?php echo esc_attr($slider_link); ?>" style="width: 100%;" />
       <p>Enter the URL Linked to the slider image if any.<br/>To link internal path copy the permalink without the base URL. e.g. <strong>/2017/10/03/article-link</strong><br/> To link to external path add http:// or https:// at the beginning of the URL. e.g. <strong>http://example.com</strong></p>
     </div>
 
@@ -89,7 +89,7 @@ function slider_link_save_meta_box_data( $post_id ){
     return;
   }
 
-  if ( isset( $_REQUEST['slider_link'] ) ) {
+  if ( isset( $_POST['slider_link'] ) ) {
     update_post_meta( $post_id, '_slider_link', sanitize_text_field( $_POST['slider_link'] ) );
   }
 }
@@ -98,16 +98,16 @@ add_action( 'save_post_slider-image', 'slider_link_save_meta_box_data' );
 function slider_link_get_meta_box_data($post_id){
     // @todo: format the url into proper url
     $slider_link = get_post_meta($post_id, '_slider_link', true);
-    if($slider_link == ''){
+    if($slider_link === ''){
         return '#';
     }
 
-    if(substr($slider_link, 0, 7) == 'http://' || substr($slider_link, 0, 8) == 'https://'){
+    if(substr($slider_link, 0, 7) === 'http://' || substr($slider_link, 0, 8) === 'https://'){
         return $slider_link;
     }
-    if(substr($slider_link, 0, 1) != '/'){
+    if(substr($slider_link, 0, 1) !== '/'){
         $slider_link = '/'.$slider_link;
     }
-    return get_site_url().$slider_link;
+    return esc_url(get_site_url().$slider_link);
 }
 

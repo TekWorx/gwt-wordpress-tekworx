@@ -143,7 +143,7 @@ function eraseCookie(name) {
         )
       );
       $("#accessibility-contrast")
-        .attr("aria-checked", true)
+        .attr("aria-checked", "true")
         .addClass("active");
     }
     $(".toggle-contrast").on("click", function () {
@@ -157,12 +157,12 @@ function eraseCookie(name) {
         );
         $("body").addClass("contrast");
         // createCookie("a11y-high-contrast", "1");
-        $(this).attr("aria-checked", true).addClass("active");
+        $(this).attr("aria-checked", "true").addClass("active");
         return false;
       } else {
         $("#highContrastStylesheet").remove();
         $("body").removeClass("contrast");
-        $(this).removeAttr("aria-checked").removeClass("active");
+        $(this).attr("aria-checked", "false").removeClass("active");
         // eraseCookie("a11y-high-contrast");
         return false;
       }
@@ -278,45 +278,40 @@ function eraseCookie(name) {
       return false;
     });
 
-    // For Testing
-    // Adjust Text Sizing
+    var textResizeSelector = "p, li, td, th, dd, dt, span, blockquote, label, input, textarea, select, a";
     var zoom = 0;
-    $("p").each(function () {
+    $(textResizeSelector).each(function () {
       var el = $(this),
         size = parseInt(el.css("font-size"));
       el.data("font-size", size);
     });
-    // For font text default size
     $("#text-default").click(function (event) {
       event.preventDefault();
       zoom = 0;
-      $("p").each(function () {
+      $(textResizeSelector).each(function () {
         var el = $(this),
           size = el.data("font-size");
         el.css("font-size", Math.max(size + zoom, 0) + "px");
       });
     });
-    // For font text size reducer
     $("#text-reduce").click(function (event) {
       event.preventDefault();
       zoom--;
-      $("p").each(function () {
+      $(textResizeSelector).each(function () {
         var el = $(this),
           size = el.data("font-size");
         el.css("font-size", Math.max(size + zoom, 0) + "px");
       });
     });
-    // For font text size enlarger
     $("#text-enlarge").click(function (event) {
       event.preventDefault();
       zoom++;
-      $("p").each(function () {
+      $(textResizeSelector).each(function () {
         var el = $(this),
           size = el.data("font-size");
         el.css("font-size", Math.max(size + zoom, 0) + "px");
       });
     });
-    // End for Adjust Text Sizing
 
     $("#openNav").click(function (event) {
       event.preventDefault();

@@ -1,21 +1,21 @@
 <?php 
 if (is_home()){
-	$banner_class = 'large-12';
-	$banner_2_class = '';
-	$banner_3_class = '';
-	if(is_active_sidebar('banner-section-1') && is_active_sidebar('banner-section-2')){
-		$banner_class = 'large-6 columns';
-		$banner_2_class = 'large-3 columns';
-		$banner_3_class = 'large-3 columns';
-	}
-	elseif(is_active_sidebar('banner-section-1') && !is_active_sidebar('banner-section-2')){
-		$banner_class = 'large-8 columns';
-		$banner_2_class = 'large-4 columns';
-	}
-	elseif(!is_active_sidebar('banner-section-1') && is_active_sidebar('banner-section-2')){
-		$banner_class = 'large-8 columns';
-		$banner_3_class = 'large-4 columns';
-	}
+        $banner_class = 'large-12';
+        $banner_2_class = '';
+        $banner_3_class = '';
+        if(is_active_sidebar('banner-section-1') && is_active_sidebar('banner-section-2')){
+                $banner_class = 'large-6 columns';
+                $banner_2_class = 'large-3 columns';
+                $banner_3_class = 'large-3 columns';
+        }
+        elseif(is_active_sidebar('banner-section-1') && !is_active_sidebar('banner-section-2')){
+                $banner_class = 'large-8 columns';
+                $banner_2_class = 'large-4 columns';
+        }
+        elseif(!is_active_sidebar('banner-section-1') && is_active_sidebar('banner-section-2')){
+                $banner_class = 'large-8 columns';
+                $banner_3_class = 'large-4 columns';
+        }
     // Temporary commented as it need to show on mobile devices
 // $banner_class .= ' hide-for-small-only';
 }
@@ -25,7 +25,7 @@ $line_class = '';
 if(!is_home()){
   $container_class = 'banner-pads';
 }else{
-	$line_class="line";
+        $line_class="line";
 }
 ?>
 <div id="auxiliary" class="show-for-large">
@@ -50,7 +50,7 @@ if(!is_home()){
     </div>
 </div>
 <!-- banner -->
-<div class="container-banner <?php echo $container_class; ?>">
+<div class="container-banner <?php echo esc_attr($container_class); ?>">
     <?php govph_displayoptions( 'govph_slider_start' ); ?>
     <?php if (is_home()): ?>
     <?php if($banner_slider = efs_get_slider()): ?>
@@ -58,21 +58,21 @@ if(!is_home()){
     <!-- For GWT 26.0.0 remove class hide-for-small-only after large-12 on id="banner-slider" to show slider image on mobile devices -->
     <div id="banner-slider" class="large-12 ">
         <?php else: ?>
-        <div id="banner-slider" class="<?php echo $banner_class ?>">
+        <div id="banner-slider" class="<?php echo esc_attr($banner_class) ?>">
             <?php endif; ?>
             <?php echo $banner_slider ?>
         </div>
         <?php endif; ?>
 
         <?php if(is_active_sidebar('banner-section-1')): ?>
-        <div id="banner-section-1" class="<?php echo $banner_2_class ?>">
+        <div id="banner-section-1" class="<?php echo esc_attr($banner_2_class) ?>">
             <?php do_action( 'before_sidebar' ); ?>
             <?php dynamic_sidebar( 'banner-section-1' ) ?>
         </div>
         <?php endif; ?>
 
         <?php if(is_active_sidebar('banner-section-2')): ?>
-        <div id="banner-section-2" class="<?php echo $banner_3_class ?>">
+        <div id="banner-section-2" class="<?php echo esc_attr($banner_3_class) ?>">
             <?php do_action( 'before_sidebar' ); ?>
             <?php dynamic_sidebar( 'banner-section-2' ) ?>
         </div>
@@ -122,7 +122,7 @@ if(!is_home()){
 
     </div>
     <!-- This is for line as a separator after slider image -->
-    <span class="<?php echo $line_class; ?>"> </span>
+    <span class="<?php echo esc_attr($line_class); ?>"> </span>
     <!-- end of line class as a separator -->
 
     <?php include_once('breadcrumbs.php'); ?>

@@ -4,17 +4,20 @@
  */
 function gwt_wp_breadcrumb() {
 	global $post;
-	$option = get_option('govph_options');
+	$option = get_option('govph_options', array());
+	if ( ! is_array( $option ) ) {
+		$option = array();
+	}
 
-	if($option['govph_breadcrumbs_enable'] != 'true'){
+	if(($option['govph_breadcrumbs_enable'] ?? '') !== 'true'){
 		return false;
 	}
-	$separator = $option['govph_breadcrumbs_separator'] ? $option['govph_breadcrumbs_separator'] : ' / ';
-	$separator_block = '<span class="separator">'.$separator.'</span>';
+	$separator = !empty($option['govph_breadcrumbs_separator']) ? $option['govph_breadcrumbs_separator'] : ' / ';
+	$separator_block = '<span class="separator">'.esc_html($separator).'</span>';
 	
 	if (!is_home()) {
 		echo '<ul class="breadcrumbs">';
-		if($option['govph_breadcrumbs_show_home'] == 'true'){
+		if(($option['govph_breadcrumbs_show_home'] ?? '') === 'true'){
 			echo '<li>You are here:</li>';
 			echo '<li><a class="pathway" href="';
 			echo home_url();
@@ -26,7 +29,7 @@ function gwt_wp_breadcrumb() {
 		}
 		
 	} else {
-		if($option['govph_breadcrumbs_show_home'] == 'true'){
+		if(($option['govph_breadcrumbs_show_home'] ?? '') === 'true'){
 			echo '<ul class="breadcrumbs">';
 			echo '<li>You are here:</li>';
 			echo '<li><a class="pathway" href="';
@@ -54,13 +57,14 @@ function gwt_wp_breadcrumb() {
 		if($post->post_parent){
 			$anc = get_post_ancestors( $post->ID );
 			$title = get_the_title();
+			$output = '';
 			foreach ( $anc as $ancestor ) {
-				$output = '<li><a class="pathway" href="'.get_permalink($ancestor).'" title="'.get_the_title($ancestor).'">'.get_the_title($ancestor).'</a>'.$separator_block.'</li>';
+				$output = '<li><a class="pathway" href="'.esc_url(get_permalink($ancestor)).'" title="'.esc_attr(get_the_title($ancestor)).'">'.esc_html(get_the_title($ancestor)).'</a>'.$separator_block.'</li>';
 			}
 			echo $output;
-			echo '<li><span class="current show-for-sr">Current: </span>'.get_the_title().'</li>';
+			echo '<li><span class="current show-for-sr">Current: </span>'.esc_html(get_the_title()).'</li>';
 		} else {
-			echo '<li><span class="current show-for-sr">Current: </span>'.get_the_title().'</li>';
+			echo '<li><span class="current show-for-sr">Current: </span>'.esc_html(get_the_title()).'</li>';
 		}
 	}
 	
