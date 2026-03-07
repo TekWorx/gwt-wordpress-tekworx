@@ -1,0 +1,201 @@
+Act as a senior WordPress core-compatible theme engineer, PHP compatibility specialist, accessibility auditor, and performance/security reviewer.
+
+Project to review:
+WordPress Theme: “GWT”
+Repository: https://github.com/TekWorx/gwt-wordpress-tekworx
+
+Goal:
+Review, audit, improve, and optimize this WordPress theme so it works reliably with:
+- the latest stable version of WordPress
+- current supported PHP versions used in modern hosting/server environments
+- current MySQL/MariaDB-based WordPress hosting environments
+- modern browsers and responsive/mobile devices
+
+Primary objectives:
+1. Compatibility
+2. Stability
+3. Performance
+4. Security
+5. Accessibility
+6. Maintainability
+7. Standards compliance
+8. Upgrade-readiness for future WordPress releases
+
+Your task:
+Inspect the theme codebase and produce a structured technical audit plus recommended improvements.
+
+Please perform the review in the following order:
+
+1) Executive Summary
+- Summarize the overall health of the theme
+- Identify the most critical issues first
+- Classify the theme as:
+  - production-ready
+  - usable with fixes
+  - high-risk / needs significant modernization
+
+2) Compatibility Audit
+Review compatibility with:
+- latest WordPress core APIs and theme development standards
+- latest supported PHP versions
+- modern JavaScript/browser behavior
+- Gutenberg / Block Editor compatibility
+- Customizer support
+- classic widget vs block widget compatibility
+- responsive behavior across desktop/tablet/mobile
+
+Identify:
+- deprecated WordPress functions
+- deprecated PHP features
+- outdated template practices
+- assumptions that may break on newer hosting environments
+
+3) Theme Standards & Code Quality Audit
+Review the theme against:
+- WordPress Coding Standards
+- template hierarchy best practices
+- enqueueing best practices for styles/scripts
+- escaping, sanitization, validation
+- translation/i18n readiness
+- hooks/filters usage
+- separation of concerns
+- reusable functions and maintainability
+
+Flag:
+- duplicated logic
+- hardcoded values
+- fragile code
+- direct output without escaping
+- missing nonce checks
+- incorrect asset loading
+- improper use of query functions
+- any anti-patterns
+
+4) PHP Server Environment Audit
+Assess whether the theme is safe and compatible for current PHP server environments:
+- fatal error risks
+- warnings/notices on newer PHP versions
+- strict typing compatibility concerns
+- undefined variables/indexes
+- null handling issues
+- array/string behavior assumptions
+- compatibility with common Apache/Nginx + PHP-FPM hosting setups
+
+List exact files/functions likely to fail or emit warnings.
+
+5) WordPress Feature Compatibility Review
+Review support or readiness for:
+- menus
+- widgets / block widgets
+- featured images
+- custom logo
+- post thumbnails
+- editor styles
+- block editor content rendering
+- theme.json opportunities
+- accessibility-ready patterns
+- RTL support
+- multisite considerations
+- child theme friendliness
+
+Explain what is missing, outdated, or should be modernized.
+
+6) Security Audit
+Audit the theme for common WordPress/PHP security issues:
+- output escaping
+- input sanitization
+- nonce verification
+- CSRF risks
+- XSS risks
+- unsafe direct database access
+- file inclusion risks
+- upload/file handling issues
+- capability checks for admin-side actions
+- improper use of AJAX endpoints if present
+
+For each issue found:
+- explain the risk
+- identify the file/function
+- recommend the fix
+
+7) Performance Audit
+Review:
+- CSS and JS loading
+- render-blocking assets
+- unnecessary dependencies
+- duplicate requests
+- image handling
+- template inefficiencies
+- expensive queries
+- improper use of wp_head/wp_footer hooks
+- lack of caching opportunities
+- frontend bloat
+
+Recommend:
+- performance improvements
+- asset optimization
+- lazy loading opportunities
+- code cleanup
+- modern WordPress-friendly optimizations
+
+8) Accessibility Audit
+Review for:
+- semantic HTML structure
+- heading hierarchy
+- keyboard accessibility
+- focus visibility
+- contrast risks
+- ARIA misuse or missing labels
+- skip links
+- form labeling
+- screen-reader friendliness
+- mobile accessibility
+
+Prioritize issues affecting Philippine government/public-sector usability and compliance expectations.
+
+9) Government Web Template / Public Sector Readiness
+Since this theme is intended for government/public-sector use, evaluate:
+- clarity of structure
+- accessibility-readiness
+- maintainability for long-term use
+- reliability for content-heavy public service websites
+- suitability for official notices, announcements, and public information publishing
+- ability to support future eGovernment enhancements
+
+10) Modernization Opportunities
+Recommend practical improvements such as:
+- adopting theme.json where appropriate
+- improving block editor compatibility
+- reducing technical debt
+- modularizing template parts
+- improving Customizer or admin UX
+- strengthening child-theme support
+- improving maintainability without breaking existing sites
+
+11) Prioritized Action Plan
+Provide a 3-level roadmap:
+- Critical fixes (must do now)
+- Important improvements (should do next)
+- Nice-to-have optimizations (future enhancements)
+
+12) Deliverables Format
+Output your findings in this exact format:
+
+A. Executive Summary  
+B. Critical Issues  
+C. Compatibility Findings  
+D. Security Findings  
+E. Performance Findings  
+F. Accessibility Findings  
+G. Maintainability Findings  
+H. File-by-File Recommendations  
+I. Prioritized Remediation Roadmap  
+
+Important instructions:
+- Be concrete and technical.
+- Reference specific files, functions, and patterns whenever possible.
+- Do not give generic advice.
+- If code changes are recommended, show example snippets.
+- If the repository structure suggests outdated WordPress practices, explain exactly how to modernize them safely.
+- Prefer backward-compatible improvements where feasible.
+- Highlight any risks of breaking existing production sites.
