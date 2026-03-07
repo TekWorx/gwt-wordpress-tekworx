@@ -28,7 +28,12 @@ define( 'WP_DEBUG_DISPLAY', false );
 error_reporting( 0 );
 @ini_set( 'display_errors', 0 );
 
-$protocol = ( ! empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off' ) ? 'https' : 'http';
+$protocol = 'http';
+if ( ! empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off' ) {
+    $protocol = 'https';
+} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) {
+    $protocol = 'https';
+}
 $host = ! empty( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : 'localhost:5000';
 $site_url = $protocol . '://' . $host;
 
