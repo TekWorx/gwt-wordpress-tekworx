@@ -2,6 +2,14 @@
 
 All notable changes to the GWT WordPress Theme (TekWorx fork) will be documented in this file.
 
+## [27.0.2] - 2026-03-08
+
+### Fixed
+- Fixed "govph_widget_pst" block error in the Widgets admin page by adding missing `update()` and `form()` methods to the `govph_widget_pst` widget class. The Gutenberg block widget editor requires these methods for legacy widgets.
+- Fixed "text" block error in the Widgets admin page caused by the theme's `color.js` script being loaded on all admin pages. The script overrides WordPress's built-in `wpColorPicker` jQuery widget, conflicting with the Gutenberg block editor. Scripts are now restricted to the Theme Options page only.
+
+---
+
 ## [27.0.1] - 2026-03-08
 
 ### Fixed

@@ -920,7 +920,9 @@ function govph_options_init(){
 
 if (is_admin()) { add_action('admin_enqueue_scripts', 'mw_enqueue_color_picker'); }
 function mw_enqueue_color_picker( $hook_suffix ) {
-  // first check that $hook_suffix is appropriate for your admin page
+  if ( $hook_suffix !== 'appearance_page_govph-options' ) {
+    return;
+  }
   wp_enqueue_media();
   wp_enqueue_style('wp-color-picker');
   wp_enqueue_script('my-script-handle', get_template_directory_uri() . '/js/color.js', array('wp-color-picker'), false, true );
