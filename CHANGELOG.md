@@ -2,6 +2,13 @@
 
 All notable changes to the GWT WordPress Theme (TekWorx fork) will be documented in this file.
 
+## [27.0.1] - 2026-03-08
+
+### Fixed
+- Fixed "critical error" on Theme Options page (Appearance > Theme Options) caused by non-static method `govph_options_page()` being called with static syntax `array('GOVPH', 'govph_options_page')`. PHP 8.x throws a fatal error for this pattern. Method is now properly declared as `static`.
+
+---
+
 ## [27.0.0] - 2026-03-07
 
 First release under [TekWorx](https://github.com/TekWorx/gwt-wordpress-tekworx), forked from [iGovPhil/gwt-wordpress](https://github.com/iGovPhil/gwt-wordpress) v26.0.0. This release addresses critical security vulnerabilities, PHP 8.x compatibility issues, performance problems, accessibility gaps, and WordPress feature compatibility.
