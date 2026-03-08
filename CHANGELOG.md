@@ -2,6 +2,15 @@
 
 All notable changes to the GWT WordPress Theme (TekWorx fork) will be documented in this file.
 
+## [27.0.3] - 2026-03-08
+
+### Fixed
+- Fixed Auxiliary Menu not rendering on PHP 8.x due to deprecated parameter signature in `Topbar_Nav_Menu::display_element()`. Removed default value from `$depth` parameter (required parameter cannot follow optional parameter in PHP 8.x) and changed static parent call to `parent::display_element()`.
+- Guarded `govph_fix_widget_theme_urls()` filter to only run on the frontend. Previously it could fire during admin and REST API widget rendering, potentially interfering with the Gutenberg block widget editor.
+- Converted `inc/function-initialize.php` line endings from Windows (CRLF) to Unix (LF) for cross-platform compatibility.
+
+---
+
 ## [27.0.2] - 2026-03-08
 
 ### Fixed

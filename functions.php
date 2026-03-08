@@ -105,6 +105,9 @@ if ( version_compare( $GLOBALS['wp_version'], '4.4-alpha', '<' ) ) {
 
 
 function govph_fix_widget_theme_urls( $text ) {
+    if ( is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+        return $text;
+    }
     $current_uri = get_template_directory_uri();
     $text = preg_replace(
         '#https?://[^/\s"\']+/wp-content/themes/gwt-wordpress/#',
