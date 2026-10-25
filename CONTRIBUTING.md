@@ -63,10 +63,22 @@ as a guarantee that the theme or a complete WordPress website is vulnerability-f
 ## Draft release packaging
 
 After reviewing the source and completing full integration checks, create a
-version tag. Run the **Package release** workflow with the reviewed tag and no
-existing release for that version. It creates a new draft, builds the curated ZIP
-and checksum on a standard runner, uploads both files to that draft, and verifies
-their server-reported checksums. It does not publish the release automatically.
+version tag and an empty draft release under your own GitHub account, through
+the website or an authenticated user connection. Supply the intended tag
+explicitly when creating or updating the draft. Record its numeric release ID.
+Creating the draft as a user keeps that user displayed as the release author.
+
+Run the **Package release** workflow with the reviewed tag and draft release ID,
+using the same GitHub account that created the draft. The workflow builds the
+curated ZIP and checksum from the tagged source, checks that the destination is
+an empty, matching, user-created draft owned by the dispatcher, and uploads both
+files while verifying their server-reported checksums. It never creates or
+publishes a release. For a failed partial upload, review and remove its draft
+assets before retrying; published assets must not be overwritten.
+
+Check the uploader safeguards locally with
+`python3 scripts/test-release-workflow.py`. These tests use mocked requests and
+do not contact GitHub or require credentials.
 
 The runner's package tests explicitly skip the local WordPress integration check
 when the test installation is absent. Complete that check separately before

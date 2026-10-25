@@ -4,9 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Reviewed version tag to package as a new draft release
+        description: Reviewed version tag to package
         required: true
         default: v27.0.6
+        type: string
+      release_id:
+        description: ID of the empty draft release created under your GitHub account
+        required: true
         type: string
 
 permissions:
@@ -44,20 +48,22 @@ jobs:
           cd generated-artifacts
           sha256sum "$package" > SHA256SUMS.txt
 
-      - name: Create and package a new draft release
+      - name: Upload to the maintainer-created draft
         working-directory: source
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_ID: ${{ inputs.release_id }}
         shell: bash
         run: |
           set -euo pipefail
-          payload="$(jq -n --arg tag "$RELEASE_TAG" --arg commit "$(git rev-parse HEAD)" \
-            '{tag_name:$tag, target_commitish:$commit, name:$tag, draft:true,
-              prerelease:false, body:"Theme-only release candidate. Review the package and checksum before publication."}')"
-          release_id="$(gh api --method POST "repos/$GITHUB_REPOSITORY/releases" \
-            --input - --jq '.id' <<<"$payload")"
-          echo "Created draft release $release_id"
+          [[ "$RELEASE_ID" =~ ^[1-9][0-9]*$ ]] || exit 1
+          gh api "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID" \
+            > generated-artifacts/draft-release.json
+          jq -e --arg tag "$RELEASE_TAG" --arg actor "$GITHUB_ACTOR" \
+            '.draft == true and .tag_name == $tag and .author.type == "User"
+              and .author.login == $actor and (.assets | length) == 0' \
+            generated-artifacts/draft-release.json
           package="gwt-wordpress-${RELEASE_TAG#v}.zip"
           for file in "$package" SHA256SUMS.txt; do
             content_type=text/plain
@@ -67,7 +73,7 @@ jobs:
               --header "Accept: application/vnd.github+json" \
               --header "Content-Type: $content_type" \
               --data-binary "@generated-artifacts/$file" \
-              "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id/assets?name=$file" \
+              "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID/assets?name=$file" \
               > generated-artifacts/upload-response.json
             expected="sha256:$(sha256sum "generated-artifacts/$file" | cut -d' ' -f1)"
             jq -e --arg digest "$expected" \
