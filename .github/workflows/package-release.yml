@@ -1,0 +1,76 @@
+name: Package release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Reviewed version tag to package as a new draft release
+        required: true
+        default: v27.0.5
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: package-release-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the reviewed public tag
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
+          git clone --depth 1 --branch "$RELEASE_TAG" -- \
+            "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git" source
+
+      - name: Check and package the theme
+        working-directory: source
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/test-release.py
+          python3 scripts/build-release.py
+          package="gwt-wordpress-${RELEASE_TAG#v}.zip"
+          test -f "generated-artifacts/$package"
+          cd generated-artifacts
+          sha256sum "$package" > SHA256SUMS.txt
+
+      - name: Create and package a new draft release
+        working-directory: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          payload="$(jq -n --arg tag "$RELEASE_TAG" --arg commit "$(git rev-parse HEAD)" \
+            '{tag_name:$tag, target_commitish:$commit, name:$tag, draft:true,
+              prerelease:false, body:"Theme-only release candidate. Review the package and checksum before publication."}')"
+          release_id="$(gh api --method POST "repos/$GITHUB_REPOSITORY/releases" \
+            --input - --jq '.id' <<<"$payload")"
+          echo "Created draft release $release_id"
+          package="gwt-wordpress-${RELEASE_TAG#v}.zip"
+          for file in "$package" SHA256SUMS.txt; do
+            content_type=text/plain
+            if [[ "$file" = *.zip ]]; then content_type=application/zip; fi
+            curl --fail-with-body --silent --show-error --request POST \
+              --header "Authorization: Bearer $GH_TOKEN" \
+              --header "Accept: application/vnd.github+json" \
+              --header "Content-Type: $content_type" \
+              --data-binary "@generated-artifacts/$file" \
+              "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id/assets?name=$file" \
+              > generated-artifacts/upload-response.json
+            expected="sha256:$(sha256sum "generated-artifacts/$file" | cut -d' ' -f1)"
+            jq -e --arg digest "$expected" \
+              '.state == "uploaded" and .digest == $digest' \
+              generated-artifacts/upload-response.json
+          done

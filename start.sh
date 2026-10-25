@@ -1,0 +1,11 @@
+#!/bin/bash
+set -euo pipefail
+
+project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+php "$project_root/scripts/wordpress-site-url.php"
+php "$project_root/scripts/prepare-security.php"
+php "$project_root/scripts/configure-wordpress-url.php"
+cd "$project_root/wp-site"
+# The built-in server ignores .htaccess. Always use the tracked access guard,
+# in both the preview workflow and deployment (which share this entry point).
+exec php -S 0.0.0.0:5000 -t "$project_root/wp-site" "$project_root/scripts/router.php"

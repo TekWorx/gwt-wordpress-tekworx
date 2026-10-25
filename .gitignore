@@ -1,0 +1,12 @@
+# Local workspace settings are not part of the distributed theme.
+/.*
+!/.gitignore
+!/.gitattributes
+!/.editorconfig
+!/.github/
+.local/
+wp-site/
+attached_assets/
+generated-artifacts/
+__pycache__/
+*.py[cod]
