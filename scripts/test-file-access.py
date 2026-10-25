@@ -2,6 +2,8 @@
 """HTTP regression tests using disposable files, never the site's database."""
 import http.client
 import pathlib
+import re
+import shlex
 import shutil
 import socket
 import subprocess
@@ -39,6 +41,13 @@ class FileAccessTests(unittest.TestCase):
             "wp-includes/style.css": "public css",
             "wp-includes/app.js": "public js",
             "wp-includes/theme.json": '{"public":true}',
+            "wp-content/db.php": "<?php require __DIR__ . '/plugins/sqlite-database-integration/constants.php';",
+            "wp-content/plugins/sqlite-database-integration/constants.php": "<?php echo ABSPATH;",
+            "wp-content/object-cache.php": "<?php echo 'PRIVATE drop-in';",
+            "wp-content/db-error.php": "<?php echo 'PRIVATE drop-in';",
+            "wp-includes/broken-library.php": "<?php missing_library_function();",
+            "wp-includes/broken-syntax.php": "<?php function (",
+            "wp-includes/warning-library.php": "<?php trigger_error('PRIVATE warning', E_USER_WARNING); echo 'safe';",
         }
         for name, content in files.items():
             file = cls.root / name
@@ -60,10 +69,20 @@ class FileAccessTests(unittest.TestCase):
         with socket.socket() as sock:
             sock.bind(("127.0.0.1", 0))
             cls.port = sock.getsockname()[1]
+        # Use the actual tracked startup options, not a separately hardened test
+        # command. This catches regressions to PHP's default error display.
+        startup = pathlib.Path(__file__).resolve().parent.parent / "start.sh"
+        command = startup.read_text().replace("\\\n", " ")
+        match = re.search(r"^exec php (.+?) -S ", command, re.MULTILINE)
+        if match is None:
+            raise RuntimeError("Cannot locate PHP server options in start.sh")
+        cls.log = tempfile.TemporaryFile()
         cls.server = subprocess.Popen(
-            ["php", "-S", f"127.0.0.1:{cls.port}", "-t", str(cls.root),
+            ["php", "-d", "display_errors=1", "-d", "display_startup_errors=1",
+             "-d", "log_errors=0", "-d", "error_log=", *shlex.split(match.group(1)),
+             "-S", f"127.0.0.1:{cls.port}", "-t", str(cls.root),
              str(cls.project / "scripts/router.php")],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL, stderr=cls.log,
         )
         for _ in range(100):
             try:
@@ -79,6 +98,7 @@ class FileAccessTests(unittest.TestCase):
     def tearDownClass(cls):
         cls.server.terminate()
         cls.server.wait(timeout=5)
+        cls.log.close()
         cls.temp.cleanup()
 
     def request(self, path, method="GET"):
@@ -113,6 +133,9 @@ class FileAccessTests(unittest.TestCase):
             "/wp-content/themes/gwt-wordpress/../gwt-wordpress/private.json",
             "/wp-content/themes/gwt-wordpress/%2e%2e/gwt-wordpress/private.json",
             "/wp-content//database//.ht.sqlite",
+            "/wp-content/db.php", "/wp-content/%64b.php?download=1",
+            "/wp-content//db.php", "//wp-content/db.php", "/wp-content/db.php/path",
+            "/wp-content/object-cache.php", "/wp-content/db-error.php",
         ]
         for path in paths:
             for method in ("GET", "HEAD"):
@@ -120,6 +143,25 @@ class FileAccessTests(unittest.TestCase):
                     status, body = self.request(path, method)
                     self.assertIn(status, (400, 403, 404))
                     self.assertNotIn(b"PRIVATE", body)
+
+    def test_unbootstrapped_php_errors_are_logged_not_displayed(self):
+        for path, expected_status, expected_body in [
+            ("/wp-content/plugins/sqlite-database-integration/constants.php", 500, b""),
+            ("/wp-includes/broken-library.php", 500, b""),
+            ("/wp-includes/broken-syntax.php", 500, b""),
+            ("/wp-includes/warning-library.php", 200, b"safe"),
+        ]:
+            for method in ("GET", "HEAD"):
+                with self.subTest(path=path, method=method):
+                    status, body = self.request(path, method)
+                    self.assertEqual(status, expected_status)
+                    self.assertEqual(body, expected_body if method == "GET" else b"")
+        # Logging remains enabled for diagnosis without exposing it over HTTP.
+        self.log.seek(0)
+        log = self.log.read()
+        for diagnostic in (b"Undefined constant", b"missing_library_function",
+                           b"PHP Parse error", b"PRIVATE warning"):
+            self.assertIn(diagnostic, log)
 
     def test_range_request_cannot_download_database(self):
         conn = http.client.HTTPConnection("127.0.0.1", self.port, timeout=5)

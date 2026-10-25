@@ -6,7 +6,7 @@ on:
       tag:
         description: Reviewed version tag to package as a new draft release
         required: true
-        default: v27.0.5
+        default: v27.0.6
         type: string
 
 permissions:

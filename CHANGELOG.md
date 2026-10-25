@@ -2,6 +2,20 @@
 
 All notable changes to the GWT WordPress Theme (TekWorx fork) will be documented in this file.
 
+## [27.0.6] - 2026-10-25
+
+### Optional hosting protections
+- Disable PHP error display at server startup, before WordPress or directly requested libraries load. Keep warnings, uncaught errors, and parse failures in server logs instead of visitor responses.
+- Deny direct HTTP requests to WordPress drop-in files, including database and object-cache handlers, while allowing WordPress core to include them normally.
+- These protections apply only when the repository's optional built-in-server startup and router are used. The theme-only ZIP does not install hosting configuration or automatically protect unrelated Apache or Nginx installations.
+
+### Regression checks
+- Exercise the actual startup options with disposable HTTP fixtures, including GET/HEAD requests, encoded drop-in paths, warnings, runtime errors, and parse failures.
+- Keep theme packaging and installation checks separate from the hosting-helper checks.
+- Allow widget URL checks to use an explicitly selected disposable WordPress installation instead of the maintenance site's active theme.
+
+---
+
 ## [27.0.5] - 2026-10-25
 
 ### Public distribution

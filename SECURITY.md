@@ -27,6 +27,13 @@ installation when that startup process is used. They are **not installed by the
 theme ZIP**, and do not secure a separately hosted site automatically. Do not
 copy those configuration files into an unrelated installation without review.
 
+From v27.0.6, the optional built-in-server setup also disables PHP error display
+before WordPress bootstrap and blocks direct requests to core drop-in files.
+Diagnostics remain in server logs. See [the file-access guide](https://github.com/TekWorx/gwt-wordpress-tekworx/blob/gwt-wordpress-26.0.0/scripts/FILE-ACCESS.md)
+in the source repository for setup and verification. The theme ZIP does not
+contain that guide or apply these server settings. On Apache, Nginx, or another
+host, configure equivalent error-display and file-access protections separately.
+
 ## Historical source archives
 
 The v27.0.0–v27.0.4 distribution releases have been withdrawn. Use v27.0.5 or

@@ -2,12 +2,14 @@
 /**
  * Regression checks using the local WordPress installation's real URL escaping.
  * Run: php scripts/test-widget-urls.php
+ * Set GWT_TEST_WORDPRESS_ROOT to use a disposable WordPress installation.
  * Does not save widget options or change site content.
  */
 define( 'WP_USE_THEMES', false );
 $_SERVER['HTTP_HOST'] = 'localhost';
 $_SERVER['REQUEST_URI'] = '/';
-require dirname( __DIR__ ) . '/wp-site/wp-load.php';
+$wordpress_root = getenv( 'GWT_TEST_WORDPRESS_ROOT' ) ?: dirname( __DIR__ ) . '/wp-site';
+require rtrim( $wordpress_root, '/\\' ) . '/wp-load.php';
 require_once dirname( __DIR__ ) . '/inc/govph-widget.php';
 
 function check_widget_url( $condition, $message ) {

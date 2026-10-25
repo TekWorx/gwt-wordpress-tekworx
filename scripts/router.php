@@ -34,6 +34,13 @@ foreach ($segments as $segment) {
     }
 }
 
+// WordPress drop-ins are loaded by core, never public request entry points.
+// Enforce this here rather than editing generated/vendor-managed PHP files.
+if (preg_match('~^/+wp-content/+(?:advanced-cache|db|db-error|install|maintenance|object-cache|php-error|fatal-error-handler|sunrise)\.php(?:/|$)~i', $path)) {
+    $deny();
+    return true;
+}
+
 // Allow only public asset types. In particular, database files, WAL/journal
 // sidecars, dumps, logs, backups, config files and shell scripts are not assets.
 $publicExtensions = [

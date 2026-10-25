@@ -11,6 +11,17 @@ the symlink cannot be used to download other project files. Other symlinks are
 denied. WordPress PHP endpoints, login, admin, pretty permalinks and public
 CSS/JavaScript/image/font/media assets remain available.
 
+Direct requests to WordPress drop-ins such as `wp-content/db.php` and
+`object-cache.php` receive a generic 404. Core can still include these files
+normally. Generated drop-ins and vendor libraries do not need local edits.
+
+`start.sh` disables PHP `display_errors` and `display_startup_errors` at server
+startup and enables `log_errors`. This covers runtime warnings, uncaught errors,
+and parse failures even in directly requested PHP libraries that never bootstrap
+WordPress. Diagnostics remain in server logs, not visitor responses. Other PHP
+endpoints remain available for plugin compatibility; this is not a blanket PHP
+entry-point allowlist.
+
 The database is deliberately left in place: this fix does not copy, migrate,
 reset or otherwise modify site data or the untracked WordPress configuration.
 The protection lives in tracked files and takes effect when the shared startup
